@@ -1,0 +1,35 @@
+.custom-watch-later-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(0, 0, 0, 0.85);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  z-index: 9999 !important; /* Memaksa tetap di atas video preview */
+  backdrop-filter: blur(4px);
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  pointer-events: auto !important; /* Memastikan tetap bisa diklik */
+}
+
+.custom-watch-later-btn:hover {
+  background: rgba(255, 0, 0, 0.9);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: scale(1.05);
+}
+
+.notification-watch-later-btn {
+  position: absolute;
+  top: auto;
+  bottom: 4px;
+  right: 4px;
+  padding: 3px 6px;
+  font-size: 10px;
+  white-space: nowrap;
+  border-radius: 6px;
+}

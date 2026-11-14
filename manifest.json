@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "Shorts Watch Later Button",
+  "version": "1.2",
+  "description": "Menambahkan tombol Tonton Nanti di YouTube Shorts Beranda",
+  "permissions": [
+    "tabs",
+    "scripting"
+  ],
+  "host_permissions": [
+    "*://www.youtube.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://www.youtube.com/*"],
+      "js": ["content.js"],
+      "css": ["styles.css"]
+    }
+  ]
+}
