@@ -1,8 +1,16 @@
+let saveQueue = Promise.resolve();
+
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === "addToWatchLater") {
     const videoId = request.videoId;
-    
-    chrome.tabs.create({ url: `https://www.youtube.com/watch?v=${videoId}`, active: false }, (tab) => {
+
+    const operation = saveQueue.then(() => new Promise(resolve => {
+      chrome.tabs.create({ url: `https://www.youtube.com/watch?v=${videoId}`, active: false }, (tab) => {
+        if (chrome.runtime.lastError || !tab) {
+          console.error("Failed to open YouTube tab:", chrome.runtime.lastError);
+          resolve({ status: "failed" });
+          return;
+        }
       
       // Tunggu 3 detik agar halaman dasar YouTube termuat
       setTimeout(() => {
@@ -117,17 +125,22 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
           // Beri waktu 1.5 detik lagi agar klik "Tonton Nanti" benar-benar terdaftar di server YouTube
           setTimeout(() => {
             chrome.tabs.remove(tab.id);
+            resolve({ status: success ? "success" : "failed" });
           }, 1500);
-          
-          sendResponse({ status: success ? "success" : "failed" });
         }).catch(err => {
           console.error("Background script error:", err);
           chrome.tabs.remove(tab.id);
-          sendResponse({ status: "failed" });
+          resolve({ status: "failed" });
         });
       }, 3000); // Delay awal 3 detik
+      });
+    }));
+
+    saveQueue = operation.catch(error => {
+      console.error("Watch Later operation failed:", error);
+      return { status: "failed" };
     });
-    
+    saveQueue.then(sendResponse);
     return true; // Wajib untuk sendResponse asinkron
   }
 });
